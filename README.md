@@ -14,6 +14,7 @@ Easily integrate cropping functionality into your web apps without needing heavy
 - 🪶 No dependencies – pure JavaScript
 
 ---
+<img width="406" height="634" alt="image" src="https://github.com/user-attachments/assets/9baf7836-426f-45af-9dae-b59d1ab38657" />
 
 ## 🚀 Installation
 
