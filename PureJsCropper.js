@@ -195,4 +195,14 @@ class PureJsCropper {
   }
 }
 
+// Export for Node/ESM/CommonJS
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = PureJsCropper;
+} else if (typeof define === "function" && define.amd) {
+  define([], () => PureJsCropper);
+} else {
+  window.PureJsCropper = PureJsCropper;
+}
+
+// ES module export
 export default PureJsCropper;
