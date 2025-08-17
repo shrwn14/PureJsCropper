@@ -50,8 +50,8 @@ class PureJsCropper {
 
     this.container.appendChild(this.cropBox);
 
-    // Add resize handles
-    const handles = ["nw", "ne", "sw", "se"];
+    // Add resize handles (corners + edges)
+    const handles = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
     handles.forEach(pos => {
       const handle = document.createElement("div");
       handle.className = "resize-handle " + pos;
@@ -67,17 +67,37 @@ class PureJsCropper {
           handle.style.left = "-5px";
           handle.style.top = "-5px";
           break;
+        case "n":
+          handle.style.left = "50%";
+          handle.style.top = "-5px";
+          handle.style.transform = "translateX(-50%)";
+          break;
         case "ne":
           handle.style.right = "-5px";
           handle.style.top = "-5px";
+          break;
+        case "e":
+          handle.style.right = "-5px";
+          handle.style.top = "50%";
+          handle.style.transform = "translateY(-50%)";
+          break;
+        case "se":
+          handle.style.right = "-5px";
+          handle.style.bottom = "-5px";
+          break;
+        case "s":
+          handle.style.left = "50%";
+          handle.style.bottom = "-5px";
+          handle.style.transform = "translateX(-50%)";
           break;
         case "sw":
           handle.style.left = "-5px";
           handle.style.bottom = "-5px";
           break;
-        case "se":
-          handle.style.right = "-5px";
-          handle.style.bottom = "-5px";
+        case "w":
+          handle.style.left = "-5px";
+          handle.style.top = "50%";
+          handle.style.transform = "translateY(-50%)";
           break;
       }
 
@@ -156,6 +176,20 @@ class PureJsCropper {
         newH = this.startH - dy;
         newLeft = this.startLeft + dx;
         newTop = this.startTop + dy;
+        break;
+      case "n":
+        newH = this.startH - dy;
+        newTop = this.startTop + dy;
+        break;
+      case "s":
+        newH = this.startH + dy;
+        break;
+      case "e":
+        newW = this.startW + dx;
+        break;
+      case "w":
+        newW = this.startW - dx;
+        newLeft = this.startLeft + dx;
         break;
     }
 

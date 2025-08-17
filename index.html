@@ -1,0 +1,31 @@
+<!-- This file is for testing purposes only.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="cropper"></div>
+    <button id="cropBtn">Crop</button>
+    <br />
+    <img id="result" />
+    
+    <script type="module">
+        import PureJsCropper from "./PureJsCropper.js";
+
+        const cropper = new PureJsCropper(document.getElementById("cropper"), {
+            width: "400px",
+            height: ""
+        });
+
+        cropper.loadImage("cups.jpg");
+
+        document.getElementById("cropBtn").addEventListener("click", () => {
+            const cropped = cropper.crop();
+            document.getElementById("result").src = cropped;
+        });
+    </script>
+</body>
+</html>
