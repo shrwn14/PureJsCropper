@@ -27,7 +27,7 @@ Easily integrate cropping functionality into your web apps without needing heavy
 ### From NPM
 
 ```html
-npm i purejscropper
+npm i pure-js-cropper
 ```
 
 ## Usage in Vanilla JS
@@ -73,8 +73,7 @@ You can integrate **PureJsCropper** into your Angular project like this:
 ```typescript
 // app.component.ts
 import { Component, OnInit } from "@angular/core";
-
-import PureJsCropper from 'purejscropper/PureJsCropper.js';
+import PureJsCropper from 'pure-js-cropper';
 
 @Component({
   selector: "app-root",
