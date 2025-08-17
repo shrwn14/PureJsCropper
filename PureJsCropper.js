@@ -19,6 +19,8 @@ class PureJsCropper {
   loadImage(src) {
     this.image = new Image();
     this.image.src = src;
+    this.image.style.width = this.options.width;
+    this.image.style.height = this.options.height;
     this.image.onload = () => {
       this.render();
     };
@@ -174,24 +176,34 @@ class PureJsCropper {
   }
 
   crop() {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
+    // cropBox position/size in DISPLAY pixels
     const boxX = parseInt(this.cropBox.style.left, 10);
     const boxY = parseInt(this.cropBox.style.top, 10);
     const boxW = this.cropBox.offsetWidth;
     const boxH = this.cropBox.offsetHeight;
 
-    canvas.width = boxW;
-    canvas.height = boxH;
+    // map display → natural pixels
+    const scaleX = this.image.naturalWidth  / this.image.clientWidth;
+    const scaleY = this.image.naturalHeight / this.image.clientHeight;
 
+    const sx = Math.round(boxX * scaleX);
+    const sy = Math.round(boxY * scaleY);
+    const sWidth  = Math.round(boxW * scaleX);
+    const sHeight = Math.round(boxH * scaleY);
+
+    // output canvas sized to the natural crop region
+    const canvas = document.createElement("canvas");
+    canvas.width = sWidth;
+    canvas.height = sHeight;
+
+    const ctx = canvas.getContext("2d");
     ctx.drawImage(
       this.image,
-      boxX, boxY, boxW, boxH,  // source region
-      0, 0, boxW, boxH         // destination
+      sx, sy, sWidth, sHeight,  // source (natural pixels)
+      0, 0, sWidth, sHeight     // destination
     );
 
-    return canvas.toDataURL("image/png"); // return cropped image as base64
+    return canvas.toDataURL("image/png");
   }
 }
 
