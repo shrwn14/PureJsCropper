@@ -71,35 +71,67 @@ You can integrate **PureJsCropper** into your Angular project like this:
 
 ```typescript
 // app.component.ts
-import { Component, AfterViewInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
-declare var PureJsCropper: any; // Import global library
+import PureJsCropper from 'purejscropper/PureJsCropper.js';
 
 @Component({
   selector: "app-root",
   template: `
-    <div class="cropper-container">
-      <img id="image" src="assets/sample.jpg" />
-      <button (click)="crop()">Crop</button>
-      <div *ngIf="croppedImage">
-        <h3>Cropped Result:</h3>
-        <img [src]="croppedImage" />
-      </div>
-    </div>
+    <div id="img-cropper"></div>
+    <button type="button" (click)="filePic.click()" >Browse...</button>
+    <br>
+    <button type="button" (click)="onCrop()">Crop</button>
+    <br>
+    <img [src]="croppedImg" />
+    <span style="display:none">
+      <input type="file" id="filePic" name="filePic" #filePic accept="image/*" (change)="onFileChanged($event)" />
+    <span>
   `,
 })
-export class AppComponent implements AfterViewInit {
-  croppedImage: string | null = null;
-  cropper: any;
+export class AppComponent implements OnInit {
+  cropper: PureJsCropper | null = null;
+  croppedImg: string;
 
-  ngAfterViewInit() {
-    const image = document.getElementById("image") as HTMLImageElement;
-    this.cropper = new PureJsCropper(image, { aspectRatio: 1 });
+  ngOnInit(): void {
+    this.cropper = new PureJsCropper(document.getElementById('img-cropper'), {
+      width: '100%',
+      height: '100%',
+    });
   }
 
-  crop() {
-    const canvas = this.cropper.getCroppedCanvas();
-    this.croppedImage = canvas.toDataURL("image/png");
+  onFileChanged(event: any): void {
+    event.preventDefault();
+
+    if (event && event.target) {
+      const _target: any = event.target;
+      const reader = new FileReader();
+      const _self = this;
+      const valid_images = ['.jpeg', '.jpg', '.png', '.bmp'];
+
+      reader.readAsDataURL(_target.files[0]);
+
+      reader.onload = () => {
+        const fname = _target.files[0].name.toLowerCase();
+        const ext = fname.substr(fname.lastIndexOf('.'))
+
+        if (valid_images.indexOf(ext) === -1) {
+          console.log('Unsupported file type.');
+          return;
+        }
+
+        _self.cropper.loadImage(reader.result.toString());
+
+      };
+
+      reader.onerror = (error) => {
+        console.log('upload-error: ', error);
+      };
+    }
   }
+
+  onCrop(): void {
+    this.croppedImg = this.cropper.crop();
+ }
 }
 ```
