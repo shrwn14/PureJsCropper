@@ -15,10 +15,11 @@
     
     <script type="module">
         import PureJsCropper from "./PureJsCropper.js";
-
+        
         const cropper = new PureJsCropper(document.getElementById("cropper"), {
             width: "400px",
-            height: ""
+            height: "",
+            zoomStep: 0.2
         });
 
         cropper.loadImage("cups.jpg");

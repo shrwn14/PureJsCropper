@@ -14,6 +14,7 @@ Easily integrate cropping functionality into your web apps without needing heavy
 - 🪶 No dependencies – pure JavaScript
 
 ---
+
 <img width="406" height="634" alt="image" src="https://github.com/user-attachments/assets/9baf7836-426f-45af-9dae-b59d1ab38657" />
 
 ## 🚀 Installation
@@ -42,7 +43,8 @@ npm i pure-js-cropper
   </head>
   <body>
     <div id="cropper"></div>
-    <button id="cropBtn">Crop</button>
+    <button id="cropBtn">Crop As Base64</button>
+    <button id="cropBtnBlob">Crop As Blob</button>
     <img id="result" />
 
     <script type="module">
@@ -50,14 +52,23 @@ npm i pure-js-cropper
 
       const cropper = new PureJsCropper(document.getElementById("cropper"), {
         width: "100%",
-        height: "100%",
+        height: "",
+        zoomStep: 0.2,
       });
 
-      cropper.loadImage("animals.jpg");
+      cropper.loadImage("cups.jpg");
 
       document.getElementById("cropBtn").addEventListener("click", () => {
         const cropped = cropper.crop();
         document.getElementById("result").src = cropped;
+      });
+
+      document.getElementById("cropBtnBlob").addEventListener("click", () => {
+        cropper.crop(false).then((blob) => {
+          const url = URL.createObjectURL(blob);
+          document.getElementById("result").src = url;
+          console.log("Cropped image in Blob output");
+        });
       });
     </script>
   </body>
@@ -73,20 +84,27 @@ You can integrate **PureJsCropper** into your Angular project like this:
 ```typescript
 // app.component.ts
 import { Component, OnInit } from "@angular/core";
-import PureJsCropper from 'pure-js-cropper';
+import PureJsCropper from "pure-js-cropper";
 
 @Component({
   selector: "app-root",
   template: `
     <div id="img-cropper"></div>
-    <button type="button" (click)="filePic.click()" >Browse...</button>
-    <br>
+    <button type="button" (click)="filePic.click()">Browse...</button>
+    <br />
     <button type="button" (click)="onCrop()">Crop</button>
-    <br>
+    <br />
     <img [src]="croppedImg" />
     <span style="display:none">
-      <input type="file" id="filePic" name="filePic" #filePic accept="image/*" (change)="onFileChanged($event)" />
-    <span>
+      <input
+        type="file"
+        id="filePic"
+        name="filePic"
+        #filePic
+        accept="image/*"
+        (change)="onFileChanged($event)" />
+      <span> </span
+    ></span>
   `,
 })
 export class AppComponent implements OnInit {
@@ -94,9 +112,10 @@ export class AppComponent implements OnInit {
   croppedImg: string;
 
   ngOnInit(): void {
-    this.cropper = new PureJsCropper(document.getElementById('img-cropper'), {
-      width: '100%',
-      height: '100%',
+    this.cropper = new PureJsCropper(document.getElementById("img-cropper"), {
+      width: "100%",
+      height: "",
+      zoomStep: 0.2,
     });
   }
 
@@ -106,32 +125,30 @@ export class AppComponent implements OnInit {
     if (event && event.target) {
       const _target: any = event.target;
       const reader = new FileReader();
-      const _self = this;
-      const valid_images = ['.jpeg', '.jpg', '.png', '.bmp'];
+      const valid_images = [".jpeg", ".jpg", ".png", ".bmp"];
 
       reader.readAsDataURL(_target.files[0]);
 
       reader.onload = () => {
         const fname = _target.files[0].name.toLowerCase();
-        const ext = fname.substr(fname.lastIndexOf('.'))
+        const ext = fname.substr(fname.lastIndexOf("."));
 
         if (valid_images.indexOf(ext) === -1) {
-          console.log('Unsupported file type.');
+          console.log("Unsupported file type.");
           return;
         }
 
-        _self.cropper.loadImage(reader.result.toString());
-
+        this.cropper.loadImage(reader.result.toString());
       };
 
       reader.onerror = (error) => {
-        console.log('upload-error: ', error);
+        console.log("upload-error: ", error);
       };
     }
   }
 
   onCrop(): void {
     this.croppedImg = this.cropper.crop();
- }
+  }
 }
 ```
