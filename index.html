@@ -8,7 +8,8 @@
 </head>
 <body>
     <div id="cropper"></div>
-    <button id="cropBtn">Crop</button>
+    <button id="cropBtn">Crop (base64)</button>
+    <button id="cropBtnBlob">Crop (Blob)</button>
     <br />
     <img id="result" />
     
@@ -25,6 +26,15 @@
         document.getElementById("cropBtn").addEventListener("click", () => {
             const cropped = cropper.crop();
             document.getElementById("result").src = cropped;
+            console.log('Cropped image in base64 output');
+        });
+
+        document.getElementById("cropBtnBlob").addEventListener("click", () => {
+            cropper.crop(false).then((blob) => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById("result").src = url;
+                console.log('Cropped image in Blob output');
+            });
         });
     </script>
 </body>

@@ -209,7 +209,7 @@ class PureJsCropper {
     this.cropBox.style.top = newTop + "px";
   }
 
-  crop() {
+  crop(cropAsBase64 = true) {
     // cropBox position/size in DISPLAY pixels
     const boxX = parseInt(this.cropBox.style.left, 10);
     const boxY = parseInt(this.cropBox.style.top, 10);
@@ -237,7 +237,16 @@ class PureJsCropper {
       0, 0, sWidth, sHeight     // destination
     );
 
-    return canvas.toDataURL("image/png");
+    if (cropAsBase64) {
+      return canvas.toDataURL("image/png");
+    }
+
+    // return a Promise that resolves to a Blob
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/png");
+    });
   }
 }
 
