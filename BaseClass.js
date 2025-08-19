@@ -1,4 +1,4 @@
-class BaseClass {
+export default class BaseClass {
   constructor(container, options = {}) {
     this.container = container;
     this.image = null;
@@ -21,6 +21,8 @@ class BaseClass {
     this.image.src = src;
     this.image.style.width = this.options.width;
     this.image.style.height = this.options.height;
+    this.image.style.userSelect = "none"; // avoid text highlight
+    
     this.image.onload = () => {
       this.render();
     };
@@ -33,6 +35,7 @@ class BaseClass {
     this.container.style.width = this.options.width;
     this.container.style.height = this.options.height;
     this.container.style.overflow = "hidden";
+    this.container.style.userSelect = "none"; // avoid text highlight
 
     // Add image
     this.container.appendChild(this.image);
@@ -47,6 +50,7 @@ class BaseClass {
     this.cropBox.style.border = this.options.border;
     this.cropBox.style.cursor = "move";
     this.cropBox.style.boxSizing = "border-box";
+    this.cropBox.style.userSelect = "none"; // avoid text highlight
 
     this.container.appendChild(this.cropBox);
 
@@ -274,6 +278,3 @@ class BaseClass {
   }
 }
 
-
-// ES module export
-export default BaseClass;

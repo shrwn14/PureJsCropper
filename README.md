@@ -53,7 +53,6 @@ npm i pure-js-cropper
       const cropper = new PureJsCropper(document.getElementById("cropper"), {
         width: "100%",
         height: "",
-        zoomStep: 0.2,
       });
 
       cropper.loadImage("cups.jpg");

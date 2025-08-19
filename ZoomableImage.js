@@ -1,4 +1,4 @@
-class ZoomableImage {
+export default class ZoomableImage {
   constructor(container, options = {}) {
     this.container = container;
     this.image = null;
@@ -46,5 +46,3 @@ class ZoomableImage {
     });
   }
 }
-
-export default ZoomableImage;
