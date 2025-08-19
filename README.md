@@ -43,8 +43,8 @@ npm i pure-js-cropper
   </head>
   <body>
     <div id="cropper"></div>
-    <button id="cropBtn">Crop As Base64</button>
-    <button id="cropBtnBlob">Crop As Blob</button>
+    <button id="cropBtn">Crop (base64)</button>
+    <button id="cropBtnBlob">Crop (Blob)</button>
     <img id="result" />
 
     <script type="module">
