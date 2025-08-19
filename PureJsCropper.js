@@ -6,8 +6,16 @@ import BaseClass from "./BaseClass.js";
 class PureJsCropper extends BaseClass {
   constructor(container, options = {}) {
     super(container, options);
-    this.zoomable = new ZoomableImage(container, options);
-    this.draggable = new DraggableImage(container);
+
+    this.transformState = {
+      scale: 1,
+      x: 0,
+      y: 0
+    };
+
+
+    this.zoomable = new ZoomableImage(container, this.transformState, options);
+    this.draggable = new DraggableImage(container, this.transformState);
   }
 
   

@@ -1,8 +1,8 @@
 export default class ZoomableImage {
-  constructor(container, options = {}) {
+  constructor(container, transformState, options = {}) {
     this.container = container;
     this.image = null;
-    this.scale = 1;
+    this.transform = transformState;
     this.minScale = options.minScale || 0.5;
     this.maxScale = options.maxScale || 3;
     this.zoomStep = options.zoomStep || 0.1;
@@ -10,29 +10,39 @@ export default class ZoomableImage {
 
   setImage(img) {
     this.image = img;
+    this.image.style.userSelect = "none";
+    this.image.style.willChange = "transform";
+    this.image.style.maxWidth = "none";
+    this.image.style.maxHeight = "none";
     this.image.style.transformOrigin = "center center";
-    this.applyZoom();
+
+    this.applyTransform();
     this.addWheelZoom();
   }
 
-  applyZoom() {
+  applyTransform() {
     if (!this.image) return;
-    this.image.style.transform = `scale(${this.scale})`;
+    this.image.style.transform = `
+      translate(${this.transform.x}px, ${this.transform.y}px)
+      scale(${this.transform.scale})
+    `;
   }
 
   zoomIn() {
-    this.scale = Math.min(this.maxScale, this.scale + this.zoomStep);
-    this.applyZoom();
+    this.transform.scale = Math.min(this.maxScale, this.transform.scale + this.zoomStep);
+    this.applyTransform();
   }
 
   zoomOut() {
-    this.scale = Math.max(this.minScale, this.scale - this.zoomStep);
-    this.applyZoom();
+    this.transform.scale = Math.max(this.minScale, this.transform.scale - this.zoomStep);
+    this.applyTransform();
   }
 
   resetZoom() {
-    this.scale = 1;
-    this.applyZoom();
+    this.transform.scale = 1;
+    this.transform.x = 0;
+    this.transform.y = 0;
+    this.applyTransform();
   }
 
   addWheelZoom() {
